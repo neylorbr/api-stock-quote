@@ -1,0 +1,32 @@
+version: '3'
+services:
+  stock-manager:
+    build:
+      context: ./
+    image: lucasvilela/stock-manager
+    ports:
+      - '8080:8080'
+
+  stock-quote-manager:
+    build: 
+       context: ./
+       dockerfile: ./Dockerfile
+    image: neylorbr/stock-quote-manager
+    ports:
+      - '8081:8081'
+    environment:
+      - PROFILE=dev
+    links:
+      - db
+  db:
+    image: mysql:8
+    ports:
+      - '3306:3306'
+      - '33060:33060'
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=bootdb
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+    - ./docker/volumes_mysql:/var/lib/mysql
